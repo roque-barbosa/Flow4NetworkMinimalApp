@@ -1,7 +1,8 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import App from './App';
+import {TestScreen} from './Screens/TestScreen';
+import {TokenScreen} from './Screens/TokenScreen';
 
 export const Router: React.FC = () => {
   return (
@@ -16,11 +17,12 @@ function RootNavigator() {
 
   return (
     <Stack.Navigator
-      initialRouteName="Login"
+      initialRouteName="TestScreen"
       screenOptions={{
         headerShown: false,
       }}>
-      <Stack.Screen name="App" component={App} />
+      <Stack.Screen name="TestScreen" component={TestScreen} />
+      <Stack.Screen name="TokenScreen" component={TokenScreen} />
     </Stack.Navigator>
   );
 }

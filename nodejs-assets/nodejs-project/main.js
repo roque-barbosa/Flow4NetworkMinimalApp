@@ -10,4 +10,4 @@ rn_bridge.channel.on('message', (msg) => {
 } );
 
 // Inform react-native node is initialized.
-rn_bridge.channel.send("Node was initialized.");
+// rn_bridge.channel.send("Node was initialized.");
