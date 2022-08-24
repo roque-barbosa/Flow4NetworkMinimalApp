@@ -1,0 +1,12 @@
+{
+  "name": "flow-react-node",
+  "version": "0.0.1",
+  "description": "node part of the project",
+  "dependencies": {
+    "fast-speedtest-api": "^0.3.2",
+    "net-ping": "^1.2.3"
+  },
+  "main": "main.js",
+  "author": "janeasystems",
+  "license": ""
+}
