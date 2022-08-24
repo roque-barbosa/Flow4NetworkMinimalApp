@@ -1,13 +1,28 @@
 /* eslint-disable */
-// Rename this sample file to main.js to use on your project.
-// The main.js file will be overwritten in updates/reinstalls.
-
 var rn_bridge = require('rn-bridge');
 
-// Echo every message received from react-native.
-rn_bridge.channel.on('message', (msg) => {
-    rn_bridge.channel.send(msg);
-} );
 
-// Inform react-native node is initialized.
-// rn_bridge.channel.send("Node was initialized.");
+rn_bridge.channel.on('message', async (url) => {
+    
+
+    try {
+        const FastSpeedtest = require("fast-speedtest-api");
+        let speedtest = new FastSpeedtest({
+            token: "YXNkZmFzZGxmbnNkYWZoYXNkZmhrYWxm", // required
+            verbose: false, // default: false
+            timeout: 10000, // default: 5000
+            https: true, // default: true
+            urlCount: 5, // default: 5
+            bufferSize: 8, // default: 8
+            unit: FastSpeedtest.UNITS.Mbps // default: Bps
+        });
+        speedtest.getSpeed().then(s => {
+            rn_bridge.channel.send(`Speed: ${s} Mbps`);
+        }).catch(e => {
+            rn_bridge.channel.send(e.message);
+        });
+        // rn_bridge.channel.send(`oi`);
+    } catch (error) {
+        rn_bridge.channel.send(`deu erro: ${error}`);
+    }
+});
