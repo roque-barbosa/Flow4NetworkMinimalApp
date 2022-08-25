@@ -1,4 +1,5 @@
 import React, {useEffect} from 'react';
+import {ScrollView} from 'react-native-gesture-handler';
 import {FlowTest} from '../Components/FlowScreen/FlowTest';
 
 export const TestScreen: React.FC = ({route, navigation}: any) => {
@@ -10,5 +11,9 @@ export const TestScreen: React.FC = ({route, navigation}: any) => {
     }
   }, [params, navigation]);
 
-  return <FlowTest token={params.token} />;
+  return (
+    <ScrollView>
+      <FlowTest token={params.token} />
+    </ScrollView>
+  );
 };

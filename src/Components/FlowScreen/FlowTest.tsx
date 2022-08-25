@@ -1,7 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import {Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {startNodeThread, startSpeedTest} from '../../utils/NodeBridge';
+import {getInfoFromToken, TokenInfoType} from '../../utils/token';
 import {LoadingScreen} from '../LoadingScreen/LoadingScreen';
+import {ResultSection} from './ResultSection';
 
 interface IFlowTest {
   token: string;
@@ -9,7 +11,8 @@ interface IFlowTest {
 
 export const FlowTest: React.FC<IFlowTest> = ({token}) => {
   const [speedTestResult, setSpeedTestResult] = useState<string | null>(null);
-  console.log(token);
+  const {bgColor, logoUrl, secondaryColor, textColor}: TokenInfoType =
+    getInfoFromToken(token);
 
   const hasTestsEnded = () => {
     if (speedTestResult != null) {
@@ -24,8 +27,31 @@ export const FlowTest: React.FC<IFlowTest> = ({token}) => {
   }, []);
 
   return (
-    <View>
-      {hasTestsEnded() ? <Text>{speedTestResult}</Text> : <LoadingScreen />}
+    <View style={Styles.screnWrapper}>
+      {hasTestsEnded() ? (
+        <ResultSection
+          downloadSpeedResult={speedTestResult!}
+          bgColor={bgColor}
+          logoUrl={logoUrl}
+          secondaryColor={secondaryColor}
+          textColor={textColor}
+        />
+      ) : (
+        <LoadingScreen
+          bgColor={bgColor}
+          logoUrl={logoUrl}
+          secondaryColor={secondaryColor}
+        />
+      )}
     </View>
   );
 };
+
+const Styles = StyleSheet.create({
+  screnWrapper: {
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    backgroundColor: 'green',
+  },
+});
