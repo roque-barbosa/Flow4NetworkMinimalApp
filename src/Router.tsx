@@ -5,8 +5,22 @@ import {TestScreen} from './Screens/TestScreen';
 import {TokenScreen} from './Screens/TokenScreen';
 
 export const Router: React.FC = () => {
+  const config = {
+    screens: {
+      TestScreen: {
+        path: 'test/:token',
+        parse: {
+          token: (token: string) => `${token}`,
+        },
+      },
+    },
+  };
   return (
-    <NavigationContainer>
+    <NavigationContainer
+      linking={{
+        prefixes: ['mytest://app', 'https://www.mytestapp.com'],
+        config,
+      }}>
       <RootNavigator />
     </NavigationContainer>
   );
@@ -16,11 +30,7 @@ function RootNavigator() {
   const Stack = createNativeStackNavigator();
 
   return (
-    <Stack.Navigator
-      initialRouteName="TestScreen"
-      screenOptions={{
-        headerShown: false,
-      }}>
+    <Stack.Navigator initialRouteName="TestScreen" screenOptions={{}}>
       <Stack.Screen name="TestScreen" component={TestScreen} />
       <Stack.Screen name="TokenScreen" component={TokenScreen} />
     </Stack.Navigator>

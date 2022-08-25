@@ -1,0 +1,1 @@
+npx uri-scheme add mytest --android
