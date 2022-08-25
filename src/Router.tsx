@@ -13,6 +13,9 @@ export const Router: React.FC = () => {
           token: (token: string) => `${token}`,
         },
       },
+      TokenScreen: {
+        path: 'TokenScreen',
+      },
     },
   };
   return (
@@ -30,7 +33,7 @@ function RootNavigator() {
   const Stack = createNativeStackNavigator();
 
   return (
-    <Stack.Navigator initialRouteName="TestScreen" screenOptions={{}}>
+    <Stack.Navigator initialRouteName="TokenScreen" screenOptions={{}}>
       <Stack.Screen name="TestScreen" component={TestScreen} />
       <Stack.Screen name="TokenScreen" component={TokenScreen} />
     </Stack.Navigator>

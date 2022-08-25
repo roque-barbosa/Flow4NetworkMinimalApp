@@ -1,20 +1,14 @@
-import React, {useEffect, useState} from 'react';
-import {Text, View} from 'react-native';
-import {SpeedTest} from '../Components/TestScreen/SpeedTest';
+import React, {useEffect} from 'react';
+import {FlowTest} from '../Components/FlowScreen/FlowTest';
 
-export const TestScreen: React.FC = ({route, _navigation}: any) => {
+export const TestScreen: React.FC = ({route, navigation}: any) => {
   const params = route.params;
-  const [token, setToken] = useState<string | null>('noToken');
+
   useEffect(() => {
-    if (params) {
-      setToken(params.token);
+    if (!params) {
+      navigation.navigate('TokenScreen');
     }
-  }, [params]);
-  return (
-    <View>
-      <Text>TestScreen</Text>
-      <Text>{token}</Text>
-      <SpeedTest />
-    </View>
-  );
+  }, [params, navigation]);
+
+  return <FlowTest token={params.token} />;
 };
