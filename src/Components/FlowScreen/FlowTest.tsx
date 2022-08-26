@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
+import {DeviceInfoType, getDeviceInfo} from '../../utils/DeviceInfo';
 import {getNetworkInfo, NetworkInfoType} from '../../utils/NetworkInfo';
 import {startNodeThread, startSpeedTest} from '../../utils/NodeBridge';
 import {getInfoFromToken, TokenInfoType} from '../../utils/token';
@@ -13,11 +14,12 @@ interface IFlowTest {
 export const FlowTest: React.FC<IFlowTest> = ({token}) => {
   const [speedTestResult, setSpeedTestResult] = useState<string | null>(null);
   const [networkInfo, setNetworkInfo] = useState<NetworkInfoType | null>(null);
+  const [deviceInfo, setDeviceInfo] = useState<DeviceInfoType | null>(null);
   const {bgColor, logoUrl, secondaryColor, textColor}: TokenInfoType =
     getInfoFromToken(token);
 
   const hasTestsEnded = () => {
-    if (speedTestResult != null && networkInfo != null) {
+    if (speedTestResult != null && networkInfo != null && deviceInfo != null) {
       return true;
     }
     return false;
@@ -27,6 +29,9 @@ export const FlowTest: React.FC<IFlowTest> = ({token}) => {
     async function localDeviceTests() {
       const netInfo = await getNetworkInfo();
       setNetworkInfo(netInfo);
+
+      const devInfo = await getDeviceInfo();
+      setDeviceInfo(devInfo);
     }
 
     startNodeThread();
@@ -45,6 +50,7 @@ export const FlowTest: React.FC<IFlowTest> = ({token}) => {
           secondaryColor={secondaryColor}
           textColor={textColor}
           networkInfo={networkInfo!}
+          deviceInfo={deviceInfo!}
         />
       ) : (
         <LoadingScreen
