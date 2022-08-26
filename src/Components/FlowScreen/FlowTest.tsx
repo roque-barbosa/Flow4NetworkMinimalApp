@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
+import {getNetworkInfo, NetworkInfoType} from '../../utils/NetworkInfo';
 import {startNodeThread, startSpeedTest} from '../../utils/NodeBridge';
 import {getInfoFromToken, TokenInfoType} from '../../utils/token';
 import {LoadingScreen} from '../LoadingScreen/LoadingScreen';
@@ -11,19 +12,27 @@ interface IFlowTest {
 
 export const FlowTest: React.FC<IFlowTest> = ({token}) => {
   const [speedTestResult, setSpeedTestResult] = useState<string | null>(null);
+  const [networkInfo, setNetworkInfo] = useState<NetworkInfoType | null>(null);
   const {bgColor, logoUrl, secondaryColor, textColor}: TokenInfoType =
     getInfoFromToken(token);
 
   const hasTestsEnded = () => {
-    if (speedTestResult != null) {
+    if (speedTestResult != null && networkInfo != null) {
       return true;
     }
     return false;
   };
 
   useEffect(() => {
+    async function localDeviceTests() {
+      const netInfo = await getNetworkInfo();
+      setNetworkInfo(netInfo);
+    }
+
     startNodeThread();
     startSpeedTest(setSpeedTestResult);
+
+    localDeviceTests();
   }, []);
 
   return (
@@ -35,6 +44,7 @@ export const FlowTest: React.FC<IFlowTest> = ({token}) => {
           logoUrl={logoUrl}
           secondaryColor={secondaryColor}
           textColor={textColor}
+          networkInfo={networkInfo!}
         />
       ) : (
         <LoadingScreen

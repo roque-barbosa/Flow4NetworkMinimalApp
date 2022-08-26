@@ -27,7 +27,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
             }}
           />
         )}
-        <ActivityIndicator color={secondaryColor || undefined} size={70} />
+        <ActivityIndicator color={secondaryColor || 'green'} size={70} />
       </View>
     </SafeAreaView>
   );
@@ -35,7 +35,8 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
 
 const Styles = StyleSheet.create({
   screenWrapper: {
-    height: '100%',
+    // minheight: '100%',
+    minHeight: 720,
     width: '100%',
     display: 'flex',
     justifyContent: 'center',

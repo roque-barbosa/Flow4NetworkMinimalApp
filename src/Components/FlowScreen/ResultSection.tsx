@@ -1,5 +1,6 @@
 import React from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
+import {NetworkInfoType} from '../../utils/NetworkInfo';
 
 interface IResultSection {
   downloadSpeedResult: string;
@@ -7,6 +8,7 @@ interface IResultSection {
   logoUrl: string;
   secondaryColor: string;
   textColor: string;
+  networkInfo: NetworkInfoType;
 }
 
 export const ResultSection: React.FC<IResultSection> = ({
@@ -14,6 +16,7 @@ export const ResultSection: React.FC<IResultSection> = ({
   bgColor,
   secondaryColor,
   textColor,
+  networkInfo,
 }) => {
   return (
     <View
@@ -23,6 +26,7 @@ export const ResultSection: React.FC<IResultSection> = ({
       </View>
       <View style={Styles.contentWrapper}>
         <Text>{downloadSpeedResult}</Text>
+        <Text>{networkInfo.type}</Text>
       </View>
       <View>
         <Pressable
