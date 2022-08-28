@@ -1,16 +1,25 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Pressable, StyleSheet, Text, TextInput, View} from 'react-native';
 
 export const TokenScreen: React.FC = ({navigation}: any) => {
+  const [tokenValue, setTokenValue] = useState<string>('');
+
   return (
     <View style={Styles.screenWrapper}>
       <Text style={Styles.label}>Seu token de acesso:</Text>
-      <TextInput placeholder="Token" style={Styles.input} />
+      <TextInput
+        placeholder="Token"
+        style={Styles.input}
+        value={tokenValue}
+        onChangeText={setTokenValue}
+      />
       <Pressable
+        disabled={tokenValue === '' ? true : undefined}
         style={Styles.button}
         onPress={() => {
           navigation.navigate('TestScreen', {
-            token: '2079486d-a46f-4361-96e8-125111b8d65a',
+            // token: '2079486d-a46f-4361-96e8-125111b8d65a',
+            token: tokenValue,
           });
         }}>
         <Text style={Styles.buttonText}>Fazer teste</Text>
