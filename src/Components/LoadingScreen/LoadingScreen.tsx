@@ -1,18 +1,31 @@
-import React from 'react';
-import {View, ActivityIndicator, StyleSheet, Image} from 'react-native';
+import React, {useEffect} from 'react';
+import {
+  View,
+  ActivityIndicator,
+  StyleSheet,
+  Image,
+  Dimensions,
+  Text,
+} from 'react-native';
 import {SafeAreaView} from 'react-navigation';
+import {getPermission} from '../../utils/Permission';
 
 interface LoadingScreenProps {
   logoUrl?: string;
   bgColor?: string;
   secondaryColor?: string;
+  testMessage: string;
 }
 
 export const LoadingScreen: React.FC<LoadingScreenProps> = ({
   bgColor,
   logoUrl,
   secondaryColor,
+  testMessage,
 }) => {
+  useEffect(() => {
+    getPermission();
+  });
   return (
     <SafeAreaView
       style={[Styles.screenWrapper, {backgroundColor: bgColor || 'white'}]}>
@@ -27,6 +40,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
             }}
           />
         )}
+        {testMessage && <Text>{testMessage}</Text>}
         <ActivityIndicator color={secondaryColor || 'green'} size={70} />
       </View>
     </SafeAreaView>
@@ -35,8 +49,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
 
 const Styles = StyleSheet.create({
   screenWrapper: {
-    // minheight: '100%',
-    minHeight: 720,
+    minHeight: Dimensions.get('window').height,
     width: '100%',
     display: 'flex',
     justifyContent: 'center',
@@ -54,5 +67,6 @@ const Styles = StyleSheet.create({
     height: 200,
     width: 200,
     borderRadius: 100,
+    resizeMode: 'contain',
   },
 });

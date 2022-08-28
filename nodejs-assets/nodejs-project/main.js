@@ -17,7 +17,7 @@ rn_bridge.channel.on('message', async (url) => {
             unit: FastSpeedtest.UNITS.Mbps // default: Bps
         });
         speedtest.getSpeed().then(s => {
-            rn_bridge.channel.send(`Speed: ${s} Mbps`);
+            rn_bridge.channel.send(`${s}`);
         }).catch(e => {
             rn_bridge.channel.send(e.message);
         });
