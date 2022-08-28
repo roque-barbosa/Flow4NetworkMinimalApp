@@ -33,7 +33,10 @@ function RootNavigator() {
   const Stack = createNativeStackNavigator();
 
   return (
-    <Stack.Navigator initialRouteName="TokenScreen" screenOptions={{}}>
+    <Stack.Navigator
+      id="rootNavigator"
+      initialRouteName="TokenScreen"
+      screenOptions={{headerShown: false}}>
       <Stack.Screen name="TestScreen" component={TestScreen} />
       <Stack.Screen name="TokenScreen" component={TokenScreen} />
     </Stack.Navigator>
