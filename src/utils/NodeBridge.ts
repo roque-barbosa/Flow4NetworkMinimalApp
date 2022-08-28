@@ -8,7 +8,6 @@ export const startSpeedTest = (setState: Function) => {
   nodejs.channel.addListener(
     'message',
     msg => {
-      console.log('From node: ' + msg);
       setState(msg);
     },
     this,
