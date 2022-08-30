@@ -27,9 +27,6 @@ export const getInfoFromToken = async (token: string) => {
   await customization.urls.map((el: any) =>
     urls.push(el.url.split('https://')[1]),
   );
-  // console.log(urls2);
-  // const urls = ['www.flowbix.com', 'www.youtube.com', 'www.google.com'];
-  // console.log(urls.length);
   return {
     bgColor,
     secondaryColor,
