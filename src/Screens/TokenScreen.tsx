@@ -14,7 +14,6 @@ export const TokenScreen: React.FC = ({navigation}: any) => {
         onChangeText={setTokenValue}
       />
       <Pressable
-        disabled={tokenValue === '' ? true : undefined}
         style={Styles.button}
         onPress={() => {
           navigation.navigate('TestScreen', {

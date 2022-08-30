@@ -16,7 +16,6 @@ export const getInfoFromToken = async (token: string) => {
       'Content-Type': 'application/json; charset=utf-8',
     },
   });
-
   const resposneJson = await infoResponse.json();
   const customization = resposneJson.customization;
 
@@ -43,13 +42,23 @@ export const getInfoFromToken = async (token: string) => {
 export async function validateToken(token: string) {
   const url = `${BASE_URL}/appToken/${token}`;
 
-  const response = await fetch(url, {
-    headers: {
-      'Content-Type': 'application/json; charset=utf-8',
-    },
-  });
-  if (response.status === 200) {
-    return true;
+  try {
+    const controller = new AbortController();
+
+    const timeoutId = setTimeout(() => controller.abort(), 3000);
+
+    const response = await fetch(url, {
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+      },
+      signal: controller.signal,
+    });
+    clearTimeout(timeoutId);
+    if (response.status === 200) {
+      return true;
+    }
+    return false;
+  } catch (error) {
+    return false;
   }
-  return false;
 }
