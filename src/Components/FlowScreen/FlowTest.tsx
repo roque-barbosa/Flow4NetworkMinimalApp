@@ -10,14 +10,15 @@ import {
 import {startNodeThread, startSpeedTest} from '../../utils/NodeBridge';
 import {getInfoFromToken, TokenInfoType} from '../../utils/token';
 import {LoadingScreen} from '../LoadingScreen/LoadingScreen';
-import {ResultSection} from './ResultSection';
+import {TestsDoneScren} from '../TestsDoneScreen/TestsDoneScreen';
+// import {ResultSection} from './ResultSection';
 
 interface IFlowTest {
   token: string;
-  navigation: any;
+  // navigation: any;
 }
 
-export const FlowTest: React.FC<IFlowTest> = ({token, navigation}) => {
+export const FlowTest: React.FC<IFlowTest> = ({token}) => {
   const [speedTestResult, setSpeedTestResult] = useState<string | null>(null);
   const [networkInfo, setNetworkInfo] = useState<NetworkInfoType | null>(null);
   const [deviceInfo, setDeviceInfo] = useState<DeviceInfoType | null>(null);
@@ -43,7 +44,14 @@ export const FlowTest: React.FC<IFlowTest> = ({token, navigation}) => {
       pingsResults != null &&
       urls !== undefined
     ) {
-      console.log('STATES: ', speedTestResult, pingsResults);
+      const allResults = {
+        mtu: mtu,
+        speedTest: speedTestResult,
+        networkInfo: networkInfo,
+        deviceInfo: deviceInfo,
+        pingsResults: pingsResults,
+      };
+      console.log('RESULTADO: ', allResults);
       return true;
     }
     return false;
@@ -78,17 +86,6 @@ export const FlowTest: React.FC<IFlowTest> = ({token, navigation}) => {
       setMtu(mtuResult);
     }
 
-    // const runTests = async () => {
-    //   await getTokenInfo();
-
-    //   startNodeThread();
-    //   startSpeedTest(setSpeedTestResult);
-
-    //   await localDeviceTests();
-    //   await pingUrls();
-    //   await calcMTU();
-    // };
-
     startNodeThread();
     startSpeedTest(setSpeedTestResult);
 
@@ -106,17 +103,23 @@ export const FlowTest: React.FC<IFlowTest> = ({token, navigation}) => {
   return (
     <View style={Styles.screnWrapper}>
       {hasTestsEnded() ? (
-        <ResultSection
-          downloadSpeedResult={speedTestResult!}
+        // <ResultSection
+        //   downloadSpeedResult={speedTestResult!}
+        //   bgColor={bgColor}
+        //   logoUrl={logoUrl}
+        //   secondaryColor={secondaryColor}
+        //   textColor={textColor}
+        //   networkInfo={networkInfo!}
+        //   deviceInfo={deviceInfo!}
+        //   pingsResults={pingsResults!}
+        //   mtu={mtu}
+        //   navigation={navigation}
+        // />
+        <TestsDoneScren
           bgColor={bgColor}
           logoUrl={logoUrl}
-          secondaryColor={secondaryColor}
           textColor={textColor}
-          networkInfo={networkInfo!}
-          deviceInfo={deviceInfo!}
-          pingsResults={pingsResults!}
-          mtu={mtu}
-          navigation={navigation}
+          secondaryColor={secondaryColor}
         />
       ) : (
         <LoadingScreen
