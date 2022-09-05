@@ -6,23 +6,28 @@ export const TokenScreen: React.FC = ({navigation}: any) => {
 
   return (
     <View style={Styles.screenWrapper}>
-      <Text style={Styles.label}>Seu token de acesso:</Text>
-      <TextInput
-        placeholder="Token"
-        style={Styles.input}
-        value={tokenValue}
-        onChangeText={setTokenValue}
-      />
-      <Pressable
-        style={Styles.button}
-        onPress={() => {
-          navigation.navigate('TestScreen', {
-            // token: '2079486d-a46f-4361-96e8-125111b8d65a',
-            token: tokenValue,
-          });
-        }}>
-        <Text style={Styles.buttonText}>Fazer teste</Text>
-      </Pressable>
+      <View style={Styles.contentWrapper}>
+        <Text style={Styles.title}>Teste de rede</Text>
+        <View style={Styles.inputWrapper}>
+          <Text style={Styles.inputLabel}>Token de identificação:</Text>
+          <TextInput
+            placeholder="Seu token"
+            style={Styles.input}
+            value={tokenValue}
+            onChangeText={setTokenValue}
+            placeholderTextColor={'#505050'}
+          />
+        </View>
+        <Pressable
+          style={Styles.button}
+          onPress={() => {
+            navigation.navigate('TestScreen', {
+              token: tokenValue,
+            });
+          }}>
+          <Text style={Styles.buttonText}>Iniciar</Text>
+        </Pressable>
+      </View>
     </View>
   );
 };
@@ -35,25 +40,39 @@ const Styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  label: {
+  contentWrapper: {
+    display: 'flex',
+    height: '40%',
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  title: {
     fontSize: 28,
     marginBottom: 30,
     color: 'black',
   },
+  inputWrapper: {
+    display: 'flex',
+    width: '80%',
+  },
   input: {
     height: 44,
-    width: '80%',
+    // width: '80%',
     borderRadius: 8,
     fontSize: 16,
-    margin: 16,
+    marginTop: 3,
+    backgroundColor: '#ECFDFF',
+  },
+  inputLabel: {
+    fontSize: 14,
     color: 'black',
-    backgroundColor: '#c8c6c6',
   },
   button: {
     display: 'flex',
     height: 44,
     borderRadius: 8,
-    backgroundColor: '#676566',
+    backgroundColor: '#5EC1F9',
     width: '50%',
     justifyContent: 'center',
     alignItems: 'center',
@@ -61,5 +80,6 @@ const Styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 20,
+    color: 'white',
   },
 });
