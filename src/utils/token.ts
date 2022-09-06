@@ -1,4 +1,6 @@
-const BASE_URL = 'http://51.81.210.140:8095';
+import {baseBackendURL} from '../Constants';
+
+// const BASE_URL = 'http://51.81.210.140:8095';
 
 export type TokenInfoType = {
   bgColor: string;
@@ -9,7 +11,7 @@ export type TokenInfoType = {
 };
 
 export const getInfoFromToken = async (token: string) => {
-  let url = `${BASE_URL}/appToken/${token}/data`;
+  let url = `${baseBackendURL}/appToken/${token}/data`;
 
   const infoResponse = await fetch(url, {
     headers: {
@@ -22,7 +24,7 @@ export const getInfoFromToken = async (token: string) => {
   const bgColor = customization.page_background;
   const textColor = customization.font_color;
   const secondaryColor = customization.step_active_background;
-  const logoUrl = `${BASE_URL}${customization.logo_source}`;
+  const logoUrl = `${baseBackendURL}${customization.logo_source}`;
   const urls: any[] = [];
   await customization.urls.map((el: any) =>
     urls.push(el.url.split('https://')[1]),
@@ -37,7 +39,7 @@ export const getInfoFromToken = async (token: string) => {
 };
 
 export async function validateToken(token: string) {
-  const url = `${BASE_URL}/appToken/${token}`;
+  const url = `${baseBackendURL}/appToken/${token}`;
 
   try {
     const controller = new AbortController();

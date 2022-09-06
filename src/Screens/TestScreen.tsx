@@ -27,6 +27,7 @@ export const TestScreen: React.FC = ({route, navigation}: any) => {
     }
   }, [navigation, params]);
   return (
-    <View>{token && <FlowTest token={token} navigation={navigation} />}</View>
+    // <View>{token && <FlowTest token={token} navigation={navigation} />}</View>
+    <View>{token && <FlowTest token={token} />}</View>
   );
 };
