@@ -4,6 +4,7 @@ import {DeviceInfoType, getDeviceInfo} from '../../utils/DeviceInfo';
 import {
   getMTU,
   getNetworkInfo,
+  httpPingTest,
   NetworkInfoType,
   pingTest,
 } from '../../utils/NetworkInfo';
@@ -24,6 +25,7 @@ export const FlowTest: React.FC<IFlowTest> = ({token}) => {
   const [deviceInfo, setDeviceInfo] = useState<DeviceInfoType | null>(null);
   const [mtu, setMtu] = useState<string | number>(0);
   const [pingsResults, setPingsResults] = useState<any[] | null>(null);
+  const [httpPingsResults, setHttpPingsResults] = useState<any[] | null>(null);
   const [
     {bgColor, logoUrl, secondaryColor, textColor, urls},
     setCustomization,
@@ -42,14 +44,17 @@ export const FlowTest: React.FC<IFlowTest> = ({token}) => {
       networkInfo != null &&
       deviceInfo != null &&
       pingsResults != null &&
+      httpPingsResults != null &&
       urls !== undefined
     ) {
       const allResults = {
         mtu: mtu,
+        mss: (mtu as number) - 50,
         speedTest: speedTestResult,
         networkInfo: networkInfo,
         deviceInfo: deviceInfo,
         pingsResults: pingsResults,
+        httpPingTest: httpPingsResults,
       };
       console.log('RESULTADO: ', allResults);
       return true;
@@ -75,9 +80,15 @@ export const FlowTest: React.FC<IFlowTest> = ({token}) => {
     }
 
     async function pingUrls(testUrls: any) {
-      setonGoingTest('Teste de abertura de páginas...');
+      setonGoingTest('Teste de ping...');
       const results = await pingTest(testUrls);
       setPingsResults(results);
+    }
+
+    async function httpPingUrls(testUrls: any) {
+      setonGoingTest('Teste de abertura de páginas...');
+      const results = await httpPingTest(testUrls);
+      setHttpPingsResults(results);
     }
 
     async function calcMTU() {
@@ -86,18 +97,28 @@ export const FlowTest: React.FC<IFlowTest> = ({token}) => {
       setMtu(mtuResult);
     }
 
-    startNodeThread();
-    startSpeedTest(setSpeedTestResult);
+    // startNodeThread();
+    // startSpeedTest(setSpeedTestResult);
 
-    getTokenInfo()
-      .then(tokenInfo => {
-        // pingUrls()
-        pingUrls(tokenInfo.urls);
-      })
-      .then(() => calcMTU())
-      .then(() => localDeviceTests());
+    // getTokenInfo()
+    //   .then(tokenInfo => {
+    //     // pingUrls()
+    //     pingUrls(tokenInfo.urls);
+    //   })
+    //   .then(() => calcMTU())
+    //   .then(() => localDeviceTests());
 
-    // runTests();
+    async function runTests() {
+      startNodeThread();
+      startSpeedTest(setSpeedTestResult);
+      const newTokenInfo = await getTokenInfo();
+      await pingUrls(newTokenInfo.urls);
+      await httpPingUrls(newTokenInfo.urls);
+      await calcMTU();
+      await localDeviceTests();
+    }
+
+    runTests();
   }, []); // eslint-disable-line
 
   return (

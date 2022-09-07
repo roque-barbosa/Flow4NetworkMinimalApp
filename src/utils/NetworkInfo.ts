@@ -1,5 +1,4 @@
 import NetInfo, {NetInfoState} from '@react-native-community/netinfo';
-import {useIsEmulator} from 'react-native-device-info';
 import {NetworkInfo} from 'react-native-network-info';
 // @ts-ignore
 import Ping from 'react-native-ping';
@@ -21,26 +20,41 @@ export async function pingTest(urls: string[]) {
       let ms = await Ping.start(urls[index], {timeout: 3000});
       pingsResults.push({url: urls[index], result: ms});
     } catch (error) {
-      pingsResults.push({url: urls[index], result: 'Indisponível'});
+      pingsResults.push(await httpPing(urls[index]));
+      // pingsResults.push({url: urls[index], result: 'Indisponível'});
     }
   }
 
   return pingsResults;
 }
 
+export async function httpPingTest(urls: string[]) {
+  let pingsResults: any[] = [];
+  for (let index = 0; index < urls.length; index++) {
+    console.log(urls[index]);
+    pingsResults.push(await httpPing(urls[index]));
+  }
+
+  return pingsResults;
+}
+
 export async function httpPing(url: string) {
-  const controller = new AbortController();
+  try {
+    const controller = new AbortController();
 
-  const timeoutId = setTimeout(() => controller.abort(), 1000);
+    const timeoutId = setTimeout(() => controller.abort(), 1000);
 
-  const start = Date.now();
-  const response = await fetch(url, {signal: controller.signal});
-  clearTimeout(timeoutId);
-  const msHttp = Date.now() - start;
-  if (response.status === 200) {
-    return {url: useIsEmulator, result: msHttp};
-  } else {
-    return {url: useIsEmulator, result: 'Indisponível'};
+    const start = Date.now();
+    const response = await fetch(`https://${url}`, {signal: controller.signal});
+    clearTimeout(timeoutId);
+    const msHttp = Date.now() - start;
+    if (response.status === 200) {
+      return {url: url, result: msHttp};
+    } else {
+      return {url: url, result: '1000.00 ms ou mais'};
+    }
+  } catch (error) {
+    return {url: url, result: '1000.00 ms ou mais'};
   }
 }
 

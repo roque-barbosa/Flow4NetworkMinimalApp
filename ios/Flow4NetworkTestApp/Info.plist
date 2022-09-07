@@ -68,5 +68,10 @@
 				<string>fonts/MaterialCommunityIcons.ttf</string>
 				<string>fonts/MaterialIcons.ttf</string>
 		</array>
+		<key>NSAppTransportSecurity</key>
+		<dict>
+				<key>NSAllowsArbitraryLoads</key>
+				<true/>
+		</dict>
 	</dict>
 </plist>
