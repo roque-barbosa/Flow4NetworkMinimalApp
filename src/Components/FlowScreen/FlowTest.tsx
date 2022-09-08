@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
+import Video from 'react-native-video';
 import {DeviceInfoType, getDeviceInfo} from '../../utils/DeviceInfo';
 import {
   getMTU,
@@ -97,17 +98,6 @@ export const FlowTest: React.FC<IFlowTest> = ({token}) => {
       setMtu(mtuResult);
     }
 
-    // startNodeThread();
-    // startSpeedTest(setSpeedTestResult);
-
-    // getTokenInfo()
-    //   .then(tokenInfo => {
-    //     // pingUrls()
-    //     pingUrls(tokenInfo.urls);
-    //   })
-    //   .then(() => calcMTU())
-    //   .then(() => localDeviceTests());
-
     async function runTests() {
       startNodeThread();
       startSpeedTest(setSpeedTestResult);
@@ -150,6 +140,20 @@ export const FlowTest: React.FC<IFlowTest> = ({token}) => {
           secondaryColor={secondaryColor}
         />
       )}
+      <Video
+        source={{
+          uri: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+        }}
+        style={Styles.backgroundVideo}
+        hideShutterView={true}
+        paused={false}
+        muted={true}
+        onLoad={() => {
+          console.log(
+            'Video CARREGOU -------------------------------------------------',
+          );
+        }}
+      />
     </View>
   );
 };
@@ -160,5 +164,9 @@ const Styles = StyleSheet.create({
     height: '100%',
     display: 'flex',
     backgroundColor: 'green',
+  },
+  backgroundVideo: {
+    height: 0,
+    width: 0,
   },
 });
