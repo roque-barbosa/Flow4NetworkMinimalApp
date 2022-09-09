@@ -50,7 +50,7 @@ export const FlowTest: React.FC<IFlowTest> = ({token}) => {
     ) {
       const allResults = {
         mtu: mtu,
-        mss: (mtu as number) - 50,
+        mss: (mtu as number) - 40,
         speedTest: speedTestResult,
         networkInfo: networkInfo,
         deviceInfo: deviceInfo,
