@@ -122,7 +122,7 @@ export async function getMTU() {
 export async function doLatencyTest() {
   let result: number = 50;
   try {
-    const latency = await Ping.start('51.81.210.140', {timeout: 3000});
+    const latency = await Ping.start('8.8.8.8', {timeout: 3000});
     result = latency;
   } catch (error) {
     // @ts-ignore
