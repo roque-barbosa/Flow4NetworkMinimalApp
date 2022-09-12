@@ -62,7 +62,7 @@ export const FlowTest: React.FC<IFlowTest> = ({token}) => {
         deviceInfo: deviceInfo,
         latency: latencyTest,
         jitter: jitterTest,
-        // pingsResults: pingsResults,
+        pingsResults: pingsResults,
         pageOpening: httpPingsResults,
         streamingTest: videoTest! / 1000,
         streamingPercentTest: 100 - (videoTest! / 1000) * 10,

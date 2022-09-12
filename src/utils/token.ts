@@ -27,7 +27,10 @@ export const getInfoFromToken = async (token: string) => {
   const logoUrl = `${baseBackendURL}${customization.logo_source}`;
   const urls: any[] = [];
   await customization.urls.map((el: any) =>
-    urls.push(el.url.split('https://')[1]),
+    urls.push({
+      name: el.name,
+      url: el.url.split('https://')[1],
+    }),
   );
   return {
     bgColor,

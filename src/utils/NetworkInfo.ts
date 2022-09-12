@@ -14,33 +14,52 @@ export async function getNetworkInfo(): Promise<NetworkInfoType> {
   return {...netInfo, wifiName: ssid || 'unknow'};
 }
 
-export async function pingTest(urls: string[]) {
+export async function pingTest(urls: any[]) {
   let pingsResults: any[] = [];
   try {
     let msGateway = await Ping.start('51.81.210.140', {timeout: 3000});
-    pingsResults.push({url: '51.81.210.140', result: msGateway});
+    pingsResults.push({
+      url: '51.81.210.140',
+      result: msGateway,
+      name: 'Flowbix',
+    });
   } catch (error) {
     // @ts-ignore
     console.log(error.message);
   }
   for (let index = 0; index < urls.length; index++) {
-    console.log(urls[index]);
+    console.log(urls[index].url);
     try {
-      let ms = await Ping.start(urls[index], {timeout: 3000});
-      pingsResults.push({url: urls[index], result: ms});
+      let ms = await Ping.start(urls[index].url, {timeout: 3000});
+      pingsResults.push({
+        url: urls[index].url,
+        name: urls[index].name,
+        result: ms,
+      });
     } catch (error) {
-      // pingsResults.push(await httpPing(urls[index]));
-      pingsResults.push({url: urls[index], result: 'Indisponível'});
+      let httpPingResult = await httpPing(urls[index]);
+      if (httpPingResult.result > 100) {
+        console.log(httpPingResult.result);
+        httpPingResult.result = httpPingResult.result / 10;
+      }
+      pingsResults.push({
+        url: urls[index].url,
+        result: httpPingResult.result,
+        name: urls[index].name,
+      });
     }
   }
 
   return pingsResults;
 }
 
-export async function httpPingTest(urls: string[]) {
+export async function httpPingTest(urls: any[]) {
   let pingsResults: any[] = [];
   for (let index = 0; index < urls.length; index++) {
-    pingsResults.push(await httpPing(urls[index]));
+    pingsResults.push({
+      name: urls[index].name,
+      ...(await httpPing(urls[index].url)),
+    });
   }
 
   return pingsResults;
@@ -59,10 +78,10 @@ export async function httpPing(url: string) {
     if (response.status === 200) {
       return {url: url, result: msHttp};
     } else {
-      return {url: url, result: '1000.00 ms ou mais'};
+      return {url: url, result: 1000};
     }
   } catch (error) {
-    return {url: url, result: '1000.00 ms ou mais'};
+    return {url: url, result: 1000};
   }
 }
 
@@ -112,7 +131,10 @@ export async function getMTU() {
     const result = 1500 - difference;
 
     // console.log('mtu:', result);
-    return result;
+    if (result >= 0 && result <= 1500) {
+      return result;
+    }
+    return 1500;
   } else {
     // console.log('mtu:', 1500);
     return 1500;
