@@ -3,6 +3,7 @@ import {NetworkInfo} from 'react-native-network-info';
 // @ts-ignore
 import Ping from 'react-native-ping';
 // import {baseBackendURL} from '../Constants';
+// import axios from 'axios';
 
 export type NetworkInfoType = NetInfoState & {wifiName?: string};
 
@@ -15,13 +16,21 @@ export async function getNetworkInfo(): Promise<NetworkInfoType> {
 
 export async function pingTest(urls: string[]) {
   let pingsResults: any[] = [];
+  try {
+    let msGateway = await Ping.start('51.81.210.140', {timeout: 3000});
+    pingsResults.push({url: '51.81.210.140', result: msGateway});
+  } catch (error) {
+    // @ts-ignore
+    console.log(error.message);
+  }
   for (let index = 0; index < urls.length; index++) {
+    console.log(urls[index]);
     try {
       let ms = await Ping.start(urls[index], {timeout: 3000});
       pingsResults.push({url: urls[index], result: ms});
     } catch (error) {
-      pingsResults.push(await httpPing(urls[index]));
-      // pingsResults.push({url: urls[index], result: 'Indisponível'});
+      // pingsResults.push(await httpPing(urls[index]));
+      pingsResults.push({url: urls[index], result: 'Indisponível'});
     }
   }
 
@@ -31,7 +40,6 @@ export async function pingTest(urls: string[]) {
 export async function httpPingTest(urls: string[]) {
   let pingsResults: any[] = [];
   for (let index = 0; index < urls.length; index++) {
-    console.log(urls[index]);
     pingsResults.push(await httpPing(urls[index]));
   }
 
@@ -109,4 +117,31 @@ export async function getMTU() {
     // console.log('mtu:', 1500);
     return 1500;
   }
+}
+
+export async function doLatencyTest() {
+  let result: number = 50;
+  try {
+    const latency = await Ping.start('51.81.210.140', {timeout: 3000});
+    result = latency;
+  } catch (error) {
+    // @ts-ignore
+    console.log(error.message);
+  }
+
+  return result;
+}
+
+export async function calcJitter() {
+  let result: number = 0;
+
+  try {
+    let initialping = await Ping.start('51.81.210.140', {timeout: 3000});
+    for (let index = 0; index < 5; index++) {
+      let ping = await Ping.start('51.81.210.140', {timeout: 3000});
+      const resultTemp = Math.abs(initialping - ping);
+      result += resultTemp;
+    }
+  } catch (error) {}
+  return result / 5;
 }

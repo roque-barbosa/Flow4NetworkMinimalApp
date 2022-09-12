@@ -8,6 +8,8 @@ import {
   httpPingTest,
   NetworkInfoType,
   pingTest,
+  doLatencyTest,
+  calcJitter,
 } from '../../utils/NetworkInfo';
 import {startNodeThread, startSpeedTest} from '../../utils/NodeBridge';
 import {getInfoFromToken, TokenInfoType} from '../../utils/token';
@@ -26,7 +28,10 @@ export const FlowTest: React.FC<IFlowTest> = ({token}) => {
   const [deviceInfo, setDeviceInfo] = useState<DeviceInfoType | null>(null);
   const [mtu, setMtu] = useState<string | number>(0);
   const [pingsResults, setPingsResults] = useState<any[] | null>(null);
+  const [latencyTest, setLatencyTest] = useState<number | null>(null);
+  const [jitterTest, setJitterTest] = useState<number | null>(null);
   const [httpPingsResults, setHttpPingsResults] = useState<any[] | null>(null);
+  const [videoTest, setVideoTest] = useState<number | null>(null);
   const [
     {bgColor, logoUrl, secondaryColor, textColor, urls},
     setCustomization,
@@ -45,6 +50,7 @@ export const FlowTest: React.FC<IFlowTest> = ({token}) => {
       networkInfo != null &&
       deviceInfo != null &&
       pingsResults != null &&
+      jitterTest != null &&
       httpPingsResults != null &&
       urls !== undefined
     ) {
@@ -54,8 +60,12 @@ export const FlowTest: React.FC<IFlowTest> = ({token}) => {
         speedTest: speedTestResult,
         networkInfo: networkInfo,
         deviceInfo: deviceInfo,
-        pingsResults: pingsResults,
-        httpPingTest: httpPingsResults,
+        latency: latencyTest,
+        jitter: jitterTest,
+        // pingsResults: pingsResults,
+        pageOpening: httpPingsResults,
+        streamingTest: videoTest! / 1000,
+        streamingPercentTest: 100 - (videoTest! / 1000) * 10,
       };
       console.log('RESULTADO: ', allResults);
       return true;
@@ -98,10 +108,24 @@ export const FlowTest: React.FC<IFlowTest> = ({token}) => {
       setMtu(mtuResult);
     }
 
+    async function getLatency() {
+      setonGoingTest('Calculando Latência...');
+      const latency = await doLatencyTest();
+      setLatencyTest(latency);
+    }
+
+    async function hitterTest() {
+      setonGoingTest('Calculando Jitter...');
+      const jitter = await calcJitter();
+      setJitterTest(jitter);
+    }
+
     async function runTests() {
       startNodeThread();
       startSpeedTest(setSpeedTestResult);
       const newTokenInfo = await getTokenInfo();
+      await getLatency();
+      await hitterTest();
       await pingUrls(newTokenInfo.urls);
       await httpPingUrls(newTokenInfo.urls);
       await calcMTU();
@@ -148,10 +172,12 @@ export const FlowTest: React.FC<IFlowTest> = ({token}) => {
         hideShutterView={true}
         paused={false}
         muted={true}
+        onLoadStart={() => setVideoTest(Date.now())}
         onLoad={() => {
-          console.log(
-            'Video CARREGOU -------------------------------------------------',
-          );
+          let start = videoTest;
+          let end = Date.now();
+          let result = end - start!;
+          setVideoTest(result);
         }}
       />
     </View>
